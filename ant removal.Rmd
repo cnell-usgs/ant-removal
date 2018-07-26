@@ -1,0 +1,43 @@
+---
+title: "ant removal"
+author: "C. Nell"
+date: "7/26/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy=TRUE,error = TRUE, eval = TRUE, message = FALSE, warning = FALSE, rows.print=5, cols.min.print=4)
+
+library(tidyverse)
+library(reshape2)
+
+```  
+
+![](https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2018/1-forglobalinv.jpg)  
+
+#################
+### QUESTIONS  
+
+**Time, thermal differences** among species  
+- Is discovery time and recruitment time shorter for the Argentine ant than for the natives?  
+
+**Competitive ability**  
+- Does the Argentine ant find faster the bait when is not competing with other ants? And the native species when they’re not competing against de Argentine?   
+- Do native species find faster the bait when they’re not competing with the Argentine ant?  
+  
+**Recruitment strategy**  
+- Which species has the most numerous recruitment? And the fastest discovery time?  
+- Is always the Argentine ant the one who colonized the baits when there’s no removal or some species colonize it better?  
+- Does the Argentine ant displace other species when they’re competing? Or any of the native species displaces the Argentine ant?  
+
+#################
+## Approach    
+
+Pairwise comparisons of each ant species against the Argentine ant. Performance with removal vs competing.    
+Binary variables - did Argentine win?  
+
+```{r}
+ants<-read.csv('data/antcookie_sp_raw.csv')
+
+
+```
