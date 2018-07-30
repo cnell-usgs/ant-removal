@@ -37,7 +37,41 @@ Pairwise comparisons of each ant species against the Argentine ant. Performance 
 Binary variables - did Argentine win?  
 
 ```{r}
-ants<-read.csv('data/antcookie_sp_raw.csv')
+list.files('data')
+ants<-read.csv('data/antcookie_sp_raw.csv')%>%mutate(FLAG_ID = paste0(NATIVE_SP,'_', FLAG))
+
+antnew<-read.csv('data/ANT_NEW.csv')%>%mutate(FLAG_ID = paste0(FLAG_NATIVE,'_', FLAG))
+
+str(antnew)
+
+```  
+Flag is the unit. For each flag, removals occurred 2 days preceeding competition. Some flags had multiple native species, treat flag x native as unit, so use FLAG_ID as the replicate for the experiment (n = 19).
+
+
+For each FLAG_ID, calculate the difference in performance between  
+native and invasive ant species  
+for both with and without competition  
+```{r}
+antmelt<-antnew%>%
+  melt(id.vars=c('PLOT','FLAG','FLAG_ID','FLAG_NATIVE','ANT_SP','COMPETE','COMPETE_TRUE','COMPETE_DISPLACE','COMPETE_TIME','COMPETE_TEMP'))#%>%
+  mutate(COMPETE = ifelse(COMPETE_TRUE =='Y','Y','N')) # not competing if other ant does not show up
+#cleaning COMPETE won't work in dcsat -uses length - would want the mean in that case
+
+antcast<-antmelt%>%dplyr::select(-COMPETE_TRUE)%>%
+  dcast(PLOT+FLAG+FLAG_ID+FLAG_NATIVE+ANT_SP+variable~COMPETE)
 
 
 ```
+```{r}
+#cast by compete 
+ants%>%dplyr::select(-DAY)%>%melt(id.vars=c('NATIVE_SP','PLOT','FLAG','FLAG_ID','REMOVAL'))
+
+antz<-ants%>%dplyr::select(PLOT, FLAG_ID, COMPETE, ANT_SP,TIME_COMPETE:ANT_MAX)%>%
+  melt(id.vars=c('PLOT','FLAG_ID','COMPETE','ANT_SP'), variable.name='metric', value.name='metric_val')%>%
+  filter(!is.na(metric_val))%>%mutate(ORIGIN=ifelse(ANT_SP=='LH','invasive','native'))
+
+anty<-antz%>%dcast(PLOT+FLAG_ID+COMPETE+metric~ORIGIN, value.var='ANT_SP')
+
+
+```
+
